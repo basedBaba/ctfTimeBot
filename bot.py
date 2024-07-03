@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 TOKEN = os.getenv("TOKEN")
+PREFIX = ">"
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -19,7 +20,7 @@ async def on_message(message):
     if message.author == client.user:
         return
     
-    if message.content.startswith("$hello"):
+    if message.content == PREFIX+"hello":
         await message.channel.send("Hello!")
 
 client.run(TOKEN)
