@@ -27,11 +27,11 @@ def top_teams():
     top_teams = json.loads(response.content)
 
     top_teams_list = []
-    rank = 1
+    place = 1
     for top_team in top_teams[year]:
-        team = [rank, top_team["team_name"], top_team["points"]]
+        team = [place, top_team["team_name"], top_team["points"]]
         top_teams_list.append(team)
-        rank += 1
+        place += 1
 
     reply = tabulate(top_teams_list, table_headers, tablefmt="rounded_outline", floatfmt=".2f")
     reply = "```"+reply+"```"
