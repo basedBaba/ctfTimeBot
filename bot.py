@@ -18,27 +18,7 @@ client = discord.Client(intents=intents)
 base_url = "https://ctftime.org/api/v1"
 headers = {"User-Agent":"Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0"}
 
-def top_teams():
-    endpoint = "/top/"
-    year = str(datetime.now().year)
-    table_headers = ["Place", "Team", "Rating"]
-
-    response = requests.get(base_url+endpoint, headers=headers)
-    top_teams = json.loads(response.content)
-
-    top_teams_list = []
-    place = 1
-    for top_team in top_teams[year]:
-        team = [place, top_team["team_name"], top_team["points"]]
-        top_teams_list.append(team)
-        place += 1
-
-    reply = tabulate(top_teams_list, table_headers, tablefmt="rounded_outline", floatfmt=".2f")
-    reply = "```"+reply+"```"
-
-    return reply
-
-def top_teams_per_year(year):
+def top_teams(year):
     endpoint = f"/top/{year}/"
     table_headers = ["Place", "Team", "Rating"]
 
@@ -53,7 +33,7 @@ def top_teams_per_year(year):
         place += 1
 
     reply = tabulate(top_teams_list, table_headers, tablefmt="rounded_outline", floatfmt=".2f")
-    reply = f"```{year}\n{reply}```"
+    reply = f"```{reply}```"
 
     return reply
 
@@ -69,14 +49,13 @@ async def on_message(message):
     if message.content == PREFIX+"hello":
         await message.channel.send("Hello!")
 
-    if message.content == PREFIX+"top":
-        reply = top_teams()
-        await message.channel.send(reply)
-
-    if message.content.startswith(PREFIX+"top_"):
-        year = str(message.content.split("_")[1])
-        reply = top_teams_per_year(year)
-        await message.channel.send(f"```{year}```")
+    if message.content.startswith(PREFIX+"top"):
+        if len(message.content.split("_")) == 2:
+            year = message.content.split("_")[1]
+            await message.channel.send(f"```{year}```")
+        else:
+            year = str(datetime.now().year)
+        reply = top_teams(year)
         await message.channel.send(reply)
 
 client.run(TOKEN)
