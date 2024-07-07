@@ -55,14 +55,17 @@ async def on_message(message):
             limit = message.content.split("_")[1]
             year = message.content.split("_")[2]
             reply = top_teams(limit=limit, year=year)
+            await message.channel.send(f"```Top {limit} - {year}```")
         elif len(message.content.split("_")) == 2:
             arg = message.content.split("_")[1]
             if arg <= "20":
                 limit = arg
                 reply = top_teams(limit=limit)
+                await message.channel.send(f"```Top {limit}```")
             else:
                 year = arg
                 reply = top_teams(year=year)
+                await message.channel.send(f"```{year}```")
         else:
             reply = top_teams()
         await message.channel.send(reply)
